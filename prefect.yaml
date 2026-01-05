@@ -1,25 +1,24 @@
+# prefect.yaml  –  verified for Prefect ≥3.6.9
 name: fraud-project
-prefect-version: 3.6.9
+prefect-version: 3.6.9            # ← not required but explicit
 
-pull:
+pull:                              # 1. How the worker gets the code
   - prefect.deployments.steps.git_clone:
-      id: clone-step
+      id: clone
       repository: "https://github.com/nikhilj9/fraud-detection-ops.git"
       branch: "main"
   - prefect.deployments.steps.set_working_directory:
-      directory: "{{ clone-step.directory }}"
-
-build: null
-push: null
+      directory: "{{ clone.directory }}"
 
 deployments:
-  - name: production-fraud-model
+  - name: production-fraud-model   # 2. The deployment definition
     entrypoint: fraud_pipeline.py:fraud_pipeline
-    work_pool:
-      name: managed-fraud-pool
+
+    work_pool:                     # 3. Where the flow will run
+      name: managed-fraud-pool     #    (already created in UI)
       work_queue_name: default
-    job_variables:
-      pip_packages:
-        - pandas
-        - scikit-learn
-        - numpy
+      job_variables:               # ← THIS is the correct place
+        pip_packages:              #    for dependencies on Managed
+          - pandas
+          - scikit-learn
+          - numpy
