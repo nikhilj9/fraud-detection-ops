@@ -1,23 +1,23 @@
 name: fraud-project
-prefect-version: 3.6.9
+prefect-version: 3.0.0
 
 pull:
-  - prefect.deployments.steps.git-clone:
+  - prefect.deployments.steps.git_clone:
+      id: clone-step
       repository: "https://github.com/nikhilj9/fraud-detection-ops.git"
       branch: "main"
+  - prefect.deployments.steps.set_working_directory:
+      directory: "{{ clone-step.directory }}"
+  - prefect.deployments.steps.pip_install_requirements:
+      directory: "{{ clone-step.directory }}"
+      requirements_file: "requirements.txt"
 
-build:
-  - prefect.deployments.steps.activate-virtual-environment:
-      venv_path: ".venv"
-
+build: null
 push: null
 
 deployments:
   - name: production-fraud-model
     entrypoint: fraud_pipeline.py:fraud_pipeline
     work_pool:
-      name: process-hybrid-pool
+      name: managed-fraud-pool
       work_queue_name: default
-    job_variables:
-      env:
-        EXTRA_PIP_PACKAGES: "pandas scikit-learn prefect"
