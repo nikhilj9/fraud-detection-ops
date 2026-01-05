@@ -99,4 +99,8 @@ def fraud_pipeline():
     return accuracy
 
 if __name__ == "__main__":
-    fraud_pipeline()
+    fraud_pipeline.serve(
+        name="local-guerrilla-deploy",
+        tags=["local", "fraud"],
+        print_starting_message=True
+    )
