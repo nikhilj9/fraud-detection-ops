@@ -10,7 +10,7 @@ from prefect.artifacts import create_markdown_artifact
 from sklearn.metrics import confusion_matrix  # For the scoreboard
 from datetime import timedelta
 from prefect.tasks import task_input_hash
-
+import pandas as pd
 
 # 1. THE SCOUT: Finds and retrieves data
 # Update ONLY the load_data task
@@ -28,8 +28,8 @@ from prefect.tasks import task_input_hash
 def load_data():
     print("Attempting to connect to data warehouse...")
     
-    # Simulate a network glitch (70% chance of failure)
-    if random.random() < 0.7:
+    # Simulate a network glitch (20% chance of failure)
+    if random.random() < 0.2:
         print("⚠ CONNECTION FAILED! (Simulating 503 Error)")
         raise ValueError("Network Glitch detected")
         
