@@ -1,5 +1,5 @@
 name: fraud-project
-prefect-version: 3.0.0
+prefect-version: 3.6.9
 
 pull:
   - prefect.deployments.steps.git_clone:
@@ -8,9 +8,6 @@ pull:
       branch: "main"
   - prefect.deployments.steps.set_working_directory:
       directory: "{{ clone-step.directory }}"
-  - prefect.deployments.steps.pip_install_requirements:
-      directory: "{{ clone-step.directory }}"
-      requirements_file: "requirements.txt"
 
 build: null
 push: null
@@ -21,3 +18,8 @@ deployments:
     work_pool:
       name: managed-fraud-pool
       work_queue_name: default
+    job_variables:
+      pip_packages:
+        - pandas
+        - scikit-learn
+        - numpy
